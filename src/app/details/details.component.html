@@ -1,11 +1,11 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false"><br>
-      <a href="#"><mat-icon aria-label="Side nav toggle icon" style="margin-left:30px;" href="#"style="color:white;padding-left:10px">dashboard</mat-icon>
-      </a>
-    
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === true"><br>
+    <a href="#">
+      <mat-icon aria-label="Side nav toggle icon" style="margin-left:30px;" href="#"
+        style="color:white;padding-left:10px">dashboard</mat-icon>
+    </a>
+
     <mat-nav-list>
       <a mat-list-item href="#">Link 1</a>
       <a mat-list-item href="#">Link 2</a>
@@ -14,137 +14,225 @@
   </mat-sidenav>
   <mat-sidenav-content>
 
-      <mat-toolbar style="background-color:#7165db;width:100%">
-        <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async"
-        >
-        </button><p  style="color:white;margin-left: 30px;margin-top: 3px;">Wind Mill Inspection</p>
-      </mat-toolbar>
-        
-    <!-- Detail page content -->
- 
-  
-    <div class="bounds">
-      <div class="content" fxLayout="row" fxLayout.xs="row" fxFlexFill>
-        <div fxFlex="25" class="sec1" fxFlex.xs="55">
-          <div *ngFor="let i of displayList" class="detailId">
-            {{ i.wtg_id }}
-          </div>
-          <div *ngFor="let i of displayList" class="detailLabel">
-            {{ i.blades[0].label }}
-          </div>
-         
-          <div *ngFor="let i of displayList" class="detailBladeModel">
-            S/N : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-            {{ i.inspection_date.slice(0,4) }} <br>
-            {{ "Blade Model :" + i.blade_model }}
+    <mat-toolbar style="background-color:#7165db;width:100%">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button 
+        *ngIf="isHandset$ | async">
+      </button>
+      <p style="color:white;margin-left: 30px;margin-top: 3px;">Wind Mill Inspection</p>
+    </mat-toolbar>
 
-          </div>
-          <div class="detailMainWtg">
-            <div class="detailWtg">
-              <div *ngFor="let i of displayList" class="">
-                {{ "WTG :" + i.wtg_id }}
-              </div>
-              <div *ngFor="let i of displayList" class="">
-                {{ "Class :" + i.wtg_class }}
-              </div>
-              <div *ngFor="let i of displayList" class="">
-                {{ "Farm :" + i.farm }}
-              </div>
-              <div *ngFor="let i of displayList" class="">
-                {{ "WTG Model :" + i.wtg_model }}
-              </div>
-            </div>
-          </div>
-          <div >
-            <img src="../../assets/images/notes.png" alt="" class="detailNote">
-            Add Note
-          </div>
+
+      
+
+
+    <div class="details">
+      
+      <div class="item1" fxFlex="30%" fxLayout.xs="column" *ngFor="let i of   displayList">
+        {{i.wtg_id}}
+        <div class="item2">
+          {{i.blades[0].label}}
+        </div><br><br>
+        <div class="blades">
+          S/N :- &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{{i.blades[0].serial_number}} <br>
+          Blade Model:{{i.blade_model}}
         </div>
-        <div fxFlex="100" class="sec2" fxFlex.xs="15">
-          <div class="detailFilter">
-            <mat-form-field appearance="fill">
-              <mat-label>WTG ID</mat-label>
-              <mat-select multiple>
-                <mat-option>Reset</mat-option>
-                <mat-option> wtgId </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-              <mat-label>Inspection Date</mat-label>
-              <mat-select multiple>
-                <mat-option>Reset</mat-option>
-                <mat-option> Date </mat-option>
-              </mat-select>
-            </mat-form-field>
-           
-              <img src="../../assets/images/filter.png" alt="" class="detailFilterImage">
-           
-          </div>
-          <div class="detailImg">
-            <div class="inline-block">
-              <img
-                src="../../assets/images/windmill.jpg"
-                alt=""
-              />
-            </div>
-            <div class="inline-block">
-              <img
-              src="../../assets/images/windmill.jpg"
 
-                alt=""
-              />
-            </div>
-            <div class="inline-block">
-              <img
-              src="../../assets/images/windmill.jpg"
-
-                alt=""
-              />
-            </div>
-            <div class="inline-block">
-              <img
-              src="../../assets/images/windmill.jpg"
-   
-              alt=""
-              />
-            </div>
-            <div class="inline-block">
-              <img
-              src="../../assets/images/windmill.jpg"
-
-                alt=""
-              />
-            </div>
-            <div class="inline-block">
-              <img
-              src="../../assets/images/windmill.jpg"
-
-                alt=""
-              />
-            </div>
-            <div class="inline-block">
-              <img
-              src="../../assets/images/windmill.jpg"
-
-                alt=""
-              />
-            </div>
-            <div class="inline-block">
-              <img
-              src="../../assets/images/windmill.jpg"
-
-                alt=""
-              />
-            </div>
-          </div>
+        <div class="item3">
+          WTG:{{i.wtg_id}} <br>
+          Class:{{i.wtg_class}} <br>
+          Farm:{{i.farm}} <br>
+          WTG Model:{{i.wtg_model}}
+        </div><br>
+        <div class="note">
+          <img src="assets\images\notes.png" (click)="drawer.toggle()">
+          Add Note
         </div>
       </div>
+
+      <div class="item4" fxFlex="100" fxLayout.xs="column">
+        <div class="filter">
+          <mat-form-field appearance="fill">
+            <mat-label>{{filterId}}</mat-label>
+          
+              <mat-select [(value)]="filterId" (selectionChange)="onToggleFilter($event)">
+            
+                <mat-option *ngFor="let id of wtg_IdList" [value]="id"> 
+                  <div fxLayoutAlign="start center"fxLayoutGap="10px">
+                  <div>
+                    {{id}}
+                  </div>
+                  </div>
+                </mat-option>
+              </mat-select>
+            
+          
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{filterDate}}</mat-label>
+            <mat-select  [(value)]="filterDate" (selectionChange)="onToggleFilter($event)">
+              <mat-option *ngFor="let i of inspectionsList" [value]="i">
+                <div fxLayoutAlign="start center"fxLayoutGap="10px">
+                  <div>
+                    {{i}}
+                  </div>
+                  </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-icon style="height: 80px;">filter_list</mat-icon>
+        </div>
+
+
+        <div class="images">
+          <div class="labelImage">
+            <div class="img" *ngFor="let i of listA.images">
+              <img src="assets\images\{{i.URI}}" width="85px" height="85px">
+              <div fxFlex="50" fxLayout="column" fxLayoutAlign="space-around center">
+
+
+                <img [src]="getImgSrc(i.image_cat)" />
+                {{
+                "cat. " +
+                (i.image_cat.validated != null
+                ? i.image_cat.validated
+                : i.image_cat.auto)
+                }}
+
+                <img src="assets\images\notes.png" width="30px" height="30px">
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div> 
+
     </div>
- 
+    <hr>
+
+    <div class="details">
+      <div class="item1" fxFlex="30%" fxLayout.xs="column" *ngFor="let i of   displayList">
+        {{i.wtg_id}}
+        <div class="item2">
+          {{i.blades[1].label}}
+        </div><br><br>
+        <div class="blades">
+          S/N :- &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{{i.blades[1].serial_number}} <br>
+          Blade Model:{{i.blade_model}}
+        </div>
+
+        <div class="item3">
+          WTG:{{i.wtg_id}} <br>
+          Class:{{i.wtg_class}} <br>
+          Farm:{{i.farm}} <br>
+          WTG Model:{{i.wtg_model}}
+        </div><br>
+        <div class="note">
+          <img src="assets\images\notes.png">
+          Add Note
+        </div>
+      </div>
+
+
+
+      <div class="images" fxFlex.xs="15">
+        <div class="labelImage">
+          <div class="img" *ngFor="let i of listB.images">
+            <img src="assets\images\{{i.URI}}" width="85px" height="85px">
+
+            <div fxFlex="50" fxLayout="column" fxLayoutAlign="space-around center">
+
+              <img [src]="getImgSrc(i.image_cat)" />
+              {{
+              "cat. " +
+              (i.image_cat.validated != null
+              ? i.image_cat.validated
+              : i.image_cat.auto)
+              }}
+
+              <img src="assets\images\notes.png" width="30px" height="30px">
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+
+
+
+
+
+
+    </div>
+
+    <hr>
+    <div class="details">
+      <div class="item1" fxFlex="30%" fxLayout.xs="column" *ngFor="let i of   displayList">
+        {{i.wtg_id}}
+        <div class="item2">
+          {{i.blades[2].label}}
+        </div><br><br>
+        <div class="blades">
+          S/N :- &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;{{i.blades[2].serial_number}} <br>
+          Blade Model:{{i.blade_model}}
+        </div>
+
+        <div class="item3">
+          WTG:{{i.wtg_id}} <br>
+          Class:{{i.wtg_class}} <br>
+          Farm:{{i.farm}} <br>
+          WTG Model:{{i.wtg_model}}
+        </div><br>
+        <div class="note">
+          <img src="assets\images\notes.png">
+          Add Note
+        </div>
+      </div>
+
+
+
+      <div class="images" fxFlex.xs="15">
+        <div class="labelImage">
+          <div class="img" *ngFor="let i of listC.images">
+            <img src="assets\images\{{i.URI}}" width="85px" height="85px">
+
+            <div fxFlex="50" fxLayout="column" fxLayoutAlign="space-around center">
+
+              <img [src]="getImgSrc(i.image_cat)" />
+              {{
+              "cat. " +
+              (i.image_cat.validated != null
+              ? i.image_cat.validated
+              : i.image_cat.auto)
+              }}
+
+              <img src="assets\images\notes.png" width="30px" height="30px">
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+
+
+
+
+      
+
+    </div>
+
+
+
   </mat-sidenav-content>
+
 </mat-sidenav-container>
+  

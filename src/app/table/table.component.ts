@@ -45,7 +45,7 @@ export class TableComponent implements OnInit {
     this.filterInspectionDateList=[];
   }
   wtdIdReset(){
-this.filterWtgIdList=[];
+  this.filterWtgIdList=[];
   }
   wtgCategoryReset(){
     this.filterWtgCatList=[];
@@ -101,7 +101,7 @@ this.filterWtgIdList=[];
   }
   onRowClick(data:any){
     console.log(data)
-  this.router.navigate(['/details',data.wtg_id,data.next_inspection.slice(0,10)])
+  this.router.navigate(['/details',data.wtg_id,data.inspection_date.slice(0,10)])
   }
 
   private setColoumDef(): void {

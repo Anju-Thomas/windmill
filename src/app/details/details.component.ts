@@ -5,6 +5,14 @@ import {ActivatedRoute} from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { inspection } from '../model/inspection.model';
+import {CatColors} from '../catColors';
+import { Router} from '@angular/router'; 
+import { MatSelectChange } from '@angular/material/select';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { variable } from '@angular/compiler/src/output/output_ast';
+
+
 
 @Component({
   selector: 'app-details',
@@ -14,20 +22,7 @@ import { map, shareReplay } from 'rxjs/operators';
 export class DetailsComponent implements OnInit {
   isActive = false;
 
-  columnDefs: any[] = [];
-  rowDataList: Wtgs[] = JSON.parse(
-    JSON.stringify(this.turbineService.wtgsList)
-  ); // Deep copy
-  farmList: string[] = [];
-  inspectionDateList: string[] = [];
-  wtgIdList: string[] = [];
-  wtgCatList: any[] = [];
-  filterFarmList: string[] = [];
-  filterInspectionDateList: string[] = [];
-  filterWtgIdList: string[] = [];
-  filterWtgCatList: string[]=[];
-  fullImagePath: string;
-
+  
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -35,154 +30,117 @@ export class DetailsComponent implements OnInit {
       shareReplay()
     );
  
-  constructor(private turbineService: TurbineService,private activerouter:ActivatedRoute,private breakpointObserver: BreakpointObserver)
-{
-  this.fullImagePath = 'assets/images/windmill.jpg'
-
- }
-
+  
+ wtg_IdList:any[]=[]
+ inspectionsList:any[]=[]
   data:any=[]
   displayList:any=[]
-  ngOnInit() {
-this.data=JSON.parse(JSON.stringify(this.activerouter.snapshot.params))
-this.setFilters();
+  listA:any
+  listB:any
+  listC:any
+  filterWtgIdList: string[] = [];
+  wtgidDateList:string[]=[];
+  idList:string[]=[];
+  inspectionDataList:any=[]
+  bladeA:any
+  bladeB:any
+  bladeC:any
+  filterId: string=""
+  filterDate:string=""
+  constructor(private turbineService: TurbineService,private activerouter:ActivatedRoute,
+    private router:Router,private breakpointObserver: BreakpointObserver)
+{
 
-this.onLoadRow()
+ }
+  ngOnInit():void{
+    this.activerouter.params.subscribe((params)=>{
+      this.data=params
+      this.onLoadRow()
+this.setFilter()
+this.filterId=this.data.id
+this.filterDate=this.data.date
+console.log(this.filterDate)
+    })
+
+
+
+
   }
-  onToggleFilter(isOpen: boolean): void {
-    if (isOpen) {
-      return;
-    }
-
-    if (
-      this.filterFarmList.length +
-        this.filterInspectionDateList.length +
-        this.filterWtgIdList.length +
-        this.filterWtgCatList.length >
-      0
-    ) {
-      this.rowDataList = this.turbineService.wtgsList.filter((wtg) => {
-        
-
-        const isValidInspectionDate =
-          this.filterInspectionDateList.length > 0
-            ? this.filterInspectionDateList.includes(
-                wtg.inspection_date.slice(0, 4)
-              )
-            : true;
-
-        const isValidWtgId =
-          this.filterWtgIdList.length > 0
-            ? this.filterWtgIdList.includes(wtg.wtg_id)
-            : true;
-
-        
-        return (
-         isValidInspectionDate && isValidWtgId 
-        );
-      });
-    } else {
-      this.rowDataList = JSON.parse(
-        JSON.stringify(this.turbineService.wtgsList)// Deep copy
-      ); 
-    }
-  }
+  rowDataList:Wtgs[]=JSON.parse(JSON.stringify(this.turbineService.wtgsList));
+  inspectionList:inspection[]=JSON.parse(JSON.stringify(this.turbineService.InspectionList))
   onLoadRow(){
     this.rowDataList.forEach(element => {
       if(this.data.id==element.wtg_id)
       {
   JSON.stringify(this.displayList.push(element))
       }
+      this.inspectionList.forEach(elem=>{
+        if(this.data.id==elem.blade_id.slice(0,4) && (this.data.date==elem.inspection_date.slice(0,10))
+        ){
+        if("A"==elem.blade_id.slice(5,6)){
+          this.listA=elem
+          // console.log(this.listA)
+        }
+        if("B"==elem.blade_id.slice(5,6)){
+          this.listB=elem
+          // console.log(this.listB)
+
+        }
+        if("C"==elem.blade_id.slice(5,6)){
+          this.listC=elem
+          // console.log(this.listC)
+          
+        }
+
+    
+        }
       
-    });
-    console.log(this.displayList)
+      })
+      });
+    // console.log(this.displayList)
+    //console.log(this.inspectionDataList) 
   } 
-  private setFilters(): void {
-    const farmList: string[] = [];
-    const inspectionDateList: string[] = [];
-    const wtgIdList: string[] = [];
 
-    this.rowDataList.forEach((element) => {
-      farmList.push(element.farm);
-      inspectionDateList.push(element.next_inspection.slice(0, 4));
-      wtgIdList.push(element.wtg_id);
-    });
-
-    farmList.sort((a, b) => {
-      const lowerA = a.trim().toLowerCase();
-      const lowerB = b.trim().toLowerCase();
-
-      return lowerA === lowerB ? 0 : lowerA > lowerB ? 1 : -1;
-    });
-
-    inspectionDateList.sort((a, b) => (a === b ? 0 : a > b ? 1 : -1));
-
-    wtgIdList.sort((a, b) => {
-      const lowerA = a.trim().toLowerCase();
-      const lowerB = b.trim().toLowerCase();
-
-      return lowerA === lowerB ? 0 : lowerA > lowerB ? 1 : -1;
-    });
-
-    this.farmList = Array.from(new Set(farmList));
-    this.inspectionDateList = Array.from(new Set(inspectionDateList));
-    this.wtgIdList = Array.from(new Set(wtgIdList));
-    this.wtgCatList = [
-      {
-        label: 'cat. 5',
-        value: 'V5',
-        imgSrc: 'assets/images/category-red-filled.png',
-      },
-      {
-        label: 'cat. 4',
-        value: 'V4',
-        imgSrc: 'assets/images/category-orange-filled.png',
-      },
-      {
-        label: 'cat. 3',
-        value: 'V3',
-        imgSrc: 'assets/images/category-yellow-filled.png',
-      },
-      {
-        label: 'cat. 2',
-        value: 'V2',
-        imgSrc: 'assets/images/category-green-filled.png',
-      },
-      {
-        label: 'cat. 1',
-        value: 'V1',
-        imgSrc: 'assets/images/category-azure-filled.png',
-      },
-      {
-        label: 'cat. 5',
-        value: 'A5',
-        imgSrc: 'assets/images/category-red-unfilled.png',
-      },
-      {
-        label: 'cat. 4',
-        value: 'A4',
-        imgSrc: 'assets/images/category-orange-unfilled.png',
-      },
-      {
-        label: 'cat. 3',
-        value: 'A3',
-        imgSrc: 'assets/images/category-yellow-unfilled.png',
-      },
-      {
-        label: 'cat. 2',
-        value: 'A2',
-        imgSrc: 'assets/images/category-green-unfilled.png',
-      },
-      {
-        label: 'cat. 1',
-        value: 'A1',
-        imgSrc: 'assets/images/category-azure-unfilled.png',
-      },
-    ];
-  }
- 
-
+  getImgSrc(imageCat: any): string {
+    let imageSrc = '../../assets/images/blade-';
   
+    const cat = imageCat.validated ?? imageCat.auto;
+    imageSrc += CatColors[cat];
+  
+    const isValidated = imageCat.validated != null;
+    imageSrc += isValidated ? '-filled.png' : '-unfilled.png';
+  
+    return imageSrc;
+  }
+   private setFilter():void{
+    const inspectionsList:string[]=[];
+    const wtg_IdList: string[] = [];
 
+     this.rowDataList.forEach((element)=>{
+       wtg_IdList.push(element.wtg_id)
+       inspectionsList.push(element.inspection_date.slice(0,10))
 
-}
+     });
+     wtg_IdList.sort((a, b) => {
+      const lowerA = a.trim().toLowerCase();
+      const lowerB = b.trim().toLowerCase();
+
+      return lowerA === lowerB ? 0 : lowerA > lowerB ? 1 : -1;
+    });
+    inspectionsList.sort((a:any,b:any)=>{
+  var val1:any = new Date(a.inspection_date).getTime()
+  var val2:any = new Date (b.inspections_date).getTime() 
+  return   val1 > val2 ? 1:-1
+
+   })
+   this.inspectionsList=Array.from(new Set(inspectionsList))
+   this.wtg_IdList=Array.from(new Set(wtg_IdList))
+  }
+  onToggleFilter(e:MatSelectChange):void{
+    this.router.navigate(['details',this.filterId,this.filterDate])
+    this.displayList=[]
+    this.listA=''
+    this.listB=''
+    this.listC=''
+  }
+  }
