@@ -1,16 +1,37 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === true"><br>
+    [mode]="(isHandset$ | async) ? 'over' : 'over'" [(opened)]="sidenavOpen" position="end"><br>
     <a href="#">
       <mat-icon aria-label="Side nav toggle icon" style="margin-left:30px;" href="#"
         style="color:white;padding-left:10px">dashboard</mat-icon>
     </a>
 
-    <mat-nav-list>
-      <a mat-list-item href="#">Link 1</a>
-      <a mat-list-item href="#">Link 2</a>
-      <a mat-list-item href="#">Link 3</a>
-    </mat-nav-list>
+    <mat-toolbar style="background-color: #9fa3a8;height:100px" >
+    <div>
+      {{"Blade"+idSelected.slice(5,6) +"-Image"+ &nbsp;+ imageIndex}}<br>
+      Add/Edit Notes
+    </div>
+    <mat-icon (click)="drawer.toggle()" class ="icon">close</mat-icon>
+   </mat-toolbar><br>
+    <div>
+      <button mat-raised-button class="button" (click)="dialogbox(templateAdd)">
+        +
+      </button>
+      <div class="addnote">Add Note</div>
+          
+      <div *ngFor ="let i of notes ; let j=index">
+        <hr>
+       <div> {{JSON.stringify(i.date)|date}}</div>
+       <div> {{JSON.stringify(i.text)}}</div>
+      
+    
+     <div>
+      <button mat-button style="color:blue" (click)="dialogbox(templatedelete);deleted(j)">DELETE</button>
+      <button mat-button style="color:blue;margin-left: 80px;"(click)="dialogbox(templateedit);edit(j)">EDIT</button>
+     </div>
+
+     </div>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
 
@@ -20,13 +41,52 @@
       </button>
       <p style="color:white;margin-left: 30px;margin-top: 3px;">Wind Mill Inspection</p>
     </mat-toolbar>
+ <div class="details">
+      <!--diagloue box-->
+        <ng-template #templateAdd>
+        <div>
+          <h1>Add Notes</h1>
+          <form [formGroup]="dialogueForm">
+          <input type="text"class="input" formControlName="note" id="note">
+          <hr>
+          <button mat-raised-button color="primary" mat-dialog-close (click)="cancel()">cancel</button>
+          <button mat-raised-button color="accent"class="s" (click)="save()" [disabled]="dialogueForm.invalid">save</button>
+          </form>
+        </div>
+
+        </ng-template>
+        
 
 
-      
+
+        <ng-template #templatedelete>
+          <div>
+            <h1>Delete Notes</h1>
+          <p>Are you sure want to delete this note?</p>
+            <hr>
+            <button mat-raised-button color="primary"  mat-dialog-close (click)="delete()">DELETE</button>
+            <button mat-raised-button class="a"  mat-dialog-close >Cancel</button>
+          
+          </div>
+  
+          </ng-template>
+          
+
+          <ng-template #templateedit>
+            <div>
+              <h1>Edit Notes</h1>
+              <form [formGroup]="dialogueForm">
+                <input type="text"class="input" formControlName="note" id="note">
+                <hr>
+                <button mat-raised-button color="primary" mat-dialog-close>Cancel</button>
+                <button mat-raised-button color="accent"class="s" (click)="editNote()" [disabled]="dialogueForm.invalid">save</button>
+              </form>
+            
+            </div>
+    
+            </ng-template>  
 
 
-    <div class="details">
-      
       <div class="item1" fxFlex="30%" fxLayout.xs="column" *ngFor="let i of   displayList">
         {{i.wtg_id}}
         <div class="item2">
@@ -45,8 +105,10 @@
           WTG Model:{{i.wtg_model}}
         </div><br>
         <div class="note">
-          <img src="assets\images\notes.png" (click)="drawer.toggle()">
+          <img src="assets\images\notes.png"  (click)="bladeClick(listA.notes,listA.blade_id.slice(5,6))">
           Add Note
+          {{listA.notes.length}}
+         
         </div>
       </div>
 
@@ -87,7 +149,7 @@
 
         <div class="images">
           <div class="labelImage">
-            <div class="img" *ngFor="let i of listA.images">
+            <div class="img" *ngFor="let i of listA.images let j=index">
               <img src="assets\images\{{i.URI}}" width="85px" height="85px">
               <div fxFlex="50" fxLayout="column" fxLayoutAlign="space-around center">
 
@@ -98,9 +160,10 @@
                 (i.image_cat.validated != null
                 ? i.image_cat.validated
                 : i.image_cat.auto)
-                }}
+                }}<br>
+                {{i.notes.length}}
 
-                <img src="assets\images\notes.png" width="30px" height="30px">
+                <img src="assets\images\notes.png" (click)="imageClick(listA.inspection_date.slice(0,10),listA.blade_id,j,i.notes)" width="30px" height="30px">
 
               </div>
 
@@ -132,7 +195,7 @@
           WTG Model:{{i.wtg_model}}
         </div><br>
         <div class="note">
-          <img src="assets\images\notes.png">
+          <img src="assets\images\notes.png" (click)="bladeClick(listB.notes,listB.blade_id.slice(5,6))" >
           Add Note
         </div>
       </div>
@@ -141,7 +204,7 @@
 
       <div class="images" fxFlex.xs="15">
         <div class="labelImage">
-          <div class="img" *ngFor="let i of listB.images">
+          <div class="img" *ngFor="let i of listB.images;let j=index">
             <img src="assets\images\{{i.URI}}" width="85px" height="85px">
 
             <div fxFlex="50" fxLayout="column" fxLayoutAlign="space-around center">
@@ -154,7 +217,9 @@
               : i.image_cat.auto)
               }}
 
-              <img src="assets\images\notes.png" width="30px" height="30px">
+              <img src="assets\images\notes.png" width="30px" height="30px"  (click)="imageClick(
+                listB.inspection_date.slice(0,10),
+                listB.blade_id,j,i.notes)">
 
             </div>
 
@@ -162,14 +227,7 @@
         </div>
 
       </div>
-
-
-
-
-
-
-
-    </div>
+  </div>
 
     <hr>
     <div class="details">
@@ -191,7 +249,7 @@
           WTG Model:{{i.wtg_model}}
         </div><br>
         <div class="note">
-          <img src="assets\images\notes.png">
+          <img src="assets\images\notes.png" (click)="bladeClick(listC.notes,listC.blade_id.slice(5,6))">
           Add Note
         </div>
       </div>
@@ -200,7 +258,7 @@
 
       <div class="images" fxFlex.xs="15">
         <div class="labelImage">
-          <div class="img" *ngFor="let i of listC.images">
+          <div class="img" *ngFor="let i of listC.images;let j=index">
             <img src="assets\images\{{i.URI}}" width="85px" height="85px">
 
             <div fxFlex="50" fxLayout="column" fxLayoutAlign="space-around center">
@@ -213,7 +271,7 @@
               : i.image_cat.auto)
               }}
 
-              <img src="assets\images\notes.png" width="30px" height="30px">
+              <img src="assets\images\notes.png" width="30px" height="30px"  (click)="imageClick(listC.inspection_date.slice(0,10),listC.blade_id,j,i.notes)">
 
             </div>
 
@@ -221,18 +279,8 @@
         </div>
 
       </div>
-
-
-
-
-
-      
-
     </div>
-
-
-
-  </mat-sidenav-content>
+</mat-sidenav-content>
 
 </mat-sidenav-container>
   

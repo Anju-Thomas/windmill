@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Inject } from '@angular/core';
 import { TurbineService } from '../services/turbine.service';
-import {Wtgs} from '../model/wtgs.model' ;
+import {Note, Wtgs} from '../model/wtgs.model' ;
 import {ActivatedRoute} from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
@@ -11,6 +11,10 @@ import { Router} from '@angular/router';
 import { MatSelectChange } from '@angular/material/select';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 import { variable } from '@angular/compiler/src/output/output_ast';
+import { MatDialog } from '@angular/material/dialog';
+import {FormGroup,FormControl,Validators} from '@angular/forms';
+
+
 
 
 
@@ -47,8 +51,22 @@ export class DetailsComponent implements OnInit {
   bladeC:any
   filterId: string=""
   filterDate:string=""
+  dateSelected:string=""
+  idSelected:string=""
+  imageIndex:number=1
+  sidenavOpen:boolean=false
+notes:Note[]=[];
+JSON=JSON;
+index:number=0;
+editIndex:number=0;
+
+dialogueForm=new FormGroup({
+  note:new FormControl('',Validators.required)
+})
+
   constructor(private turbineService: TurbineService,private activerouter:ActivatedRoute,
-    private router:Router,private breakpointObserver: BreakpointObserver)
+    private router:Router,private breakpointObserver: BreakpointObserver,public dialog: MatDialog
+    )
 {
 
  }
@@ -68,6 +86,18 @@ console.log(this.filterDate)
   }
   rowDataList:Wtgs[]=JSON.parse(JSON.stringify(this.turbineService.wtgsList));
   inspectionList:inspection[]=JSON.parse(JSON.stringify(this.turbineService.InspectionList))
+  dialogbox(templateRef:any) {
+    let dialogRef = this.dialog.open(templateRef, {
+         width: '550px',
+         height:'250px',
+        
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+        
+    });
+}
   onLoadRow(){
     this.rowDataList.forEach(element => {
       if(this.data.id==element.wtg_id)
@@ -83,12 +113,12 @@ console.log(this.filterDate)
         }
         if("B"==elem.blade_id.slice(5,6)){
           this.listB=elem
-          // console.log(this.listB)
+        
 
         }
         if("C"==elem.blade_id.slice(5,6)){
           this.listC=elem
-          // console.log(this.listC)
+         
           
         }
 
@@ -97,15 +127,14 @@ console.log(this.filterDate)
       
       })
       });
-    // console.log(this.displayList)
-    //console.log(this.inspectionDataList) 
+    
   } 
 
   getImgSrc(imageCat: any): string {
     let imageSrc = '../../assets/images/blade-';
   
     const cat = imageCat.validated ?? imageCat.auto;
-    imageSrc += CatColors[cat];
+     imageSrc += CatColors[cat];
   
     const isValidated = imageCat.validated != null;
     imageSrc += isValidated ? '-filled.png' : '-unfilled.png';
@@ -142,5 +171,61 @@ console.log(this.filterDate)
     this.listA=''
     this.listB=''
     this.listC=''
+  
   }
-  }
+
+imageClick(date:string,id:string,j:number,notes:Note[]){
+ this. dateSelected=date
+  this.idSelected=id
+ this. imageIndex=j+1
+  this.sidenavOpen=true;
+  this.notes=notes;
+
+}
+
+bladeClick(notes:Note[], label:string){
+  this.idSelected=label
+  this.sidenavOpen=true;
+  this.notes=notes;
+}
+save(){
+  this.dialog.closeAll()
+  let date=new Date().getTime()
+  let note:Note={text:this.dialogueForm.controls["note"].value,date:date}
+  this.notes.push(note)
+  this.dialogueForm.reset()
+
+}
+deleted(index:number){
+  this.index=index
+}
+ delete(){
+   
+ if (this.index>-1) {
+       this.notes.splice(this.index, 1);
+
+ 
+}
+
+} 
+
+cancel(){
+  (document.getElementById('note')as HTMLInputElement).value=''
+  this.dialogueForm.reset()
+}
+edit(editIndex:number ){
+  this.editIndex=editIndex
+  console.log(this.notes[editIndex].text);
+  this.dialogueForm.patchValue({
+    notes:this.notes[editIndex].text
+  })
+
+}
+editNote(){
+  this.notes[this.editIndex].text=this.dialogueForm.controls['note'].value
+  this.dialogueForm.reset();
+  (document.getElementById('note')as HTMLInputElement).value=''
+}
+}
+
+

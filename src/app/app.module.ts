@@ -19,6 +19,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import {MatSelectModule} from '@angular/material/select';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
+import { MatDialogModule} from '@angular/material/dialog';
+
 
 
 
@@ -50,7 +52,7 @@ import {FormsModule,ReactiveFormsModule} from '@angular/forms';
      MatSelectModule,
      FormsModule,
      ReactiveFormsModule,
-     
+     MatDialogModule
      
     
   ],
@@ -58,3 +60,4 @@ import {FormsModule,ReactiveFormsModule} from '@angular/forms';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
