@@ -203,8 +203,6 @@ deleted(index:number){
    
  if (this.index>-1) {
        this.notes.splice(this.index, 1);
-
- 
 }
 
 } 

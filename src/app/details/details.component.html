@@ -102,9 +102,9 @@
         </div><br>
         <div class="note">
           <img src="assets\images\notes.png" (click)="bladeClick(listA.notes,listA.blade_id.slice(5,6))">
-          Add Note
-          {{listA.notes.length}}
-
+          
+          {{listA.notes?.length}}
+          <div>Add Note</div>
         </div>
       </div>
 
@@ -156,13 +156,17 @@
                 (i.image_cat.validated != null
                 ? i.image_cat.validated
                 : i.image_cat.auto)
-                }}<br>
-                {{i.notes.length}}
+                }}
+                
+                <div fxLayout="row" fxLayoutAlign="start-center">
 
                 <img src="assets\images\notes.png"
                   (click)="imageClick(listA.inspection_date.slice(0,10),listA.blade_id,j,i.notes)" width="30px"
                   height="30px">
-
+                  <div class="notelength">
+                    {{i.notes.length}}
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -194,7 +198,9 @@
         </div><br>
         <div class="note">
           <img src="assets\images\notes.png" (click)="bladeClick(listB.notes,listB.blade_id.slice(5,6))">
-          Add Note
+          
+          {{listB.notes?.length}}
+         <div> Add Note</div>
         </div>
       </div>
 
@@ -214,13 +220,18 @@
               ? i.image_cat.validated
               : i.image_cat.auto)
               }}
-
-              <img src="assets\images\notes.png" width="30px" height="30px" (click)="imageClick(
+             
+            <div fxLayout="row" fxLayoutAlign="start-center">
+           <img src="assets\images\notes.png" width="30px" height="30px" (click)="imageClick(
                 listB.inspection_date.slice(0,10),
                 listB.blade_id,j,i.notes)">
-
+                <div class="notelength">
+                  {{i.notes.length}}
+               
+               </div>
+               </div>
             </div>
-
+            
           </div>
         </div>
 
@@ -248,7 +259,9 @@
         </div><br>
         <div class="note">
           <img src="assets\images\notes.png" (click)="bladeClick(listC.notes,listC.blade_id.slice(5,6))">
-          Add Note
+          
+          {{listC.notes?.length}}
+         <div> Add Note</div>
         </div>
       </div>
 
@@ -268,10 +281,14 @@
               ? i.image_cat.validated
               : i.image_cat.auto)
               }}
-
+              <div fxLayout="row" fxLayoutAlign="start-center">
               <img src="assets\images\notes.png" width="30px" height="30px"
                 (click)="imageClick(listC.inspection_date.slice(0,10),listC.blade_id,j,i.notes)">
-
+                <div class="notelength">
+                  {{i.notes.length}}
+               
+               </div> 
+              </div>
             </div>
 
           </div>
