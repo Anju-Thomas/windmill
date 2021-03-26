@@ -6,87 +6,83 @@
         style="color:white;padding-left:10px">dashboard</mat-icon>
     </a>
 
-    <mat-toolbar style="background-color: #9fa3a8;height:100px" >
-    <div>
-      {{"Blade"+idSelected.slice(5,6) +"-Image"+ &nbsp;+ imageIndex}}<br>
-      Add/Edit Notes
-    </div>
-    <mat-icon (click)="drawer.toggle()" class ="icon">close</mat-icon>
-   </mat-toolbar><br>
+    <mat-toolbar style="background-color: #9fa3a8;height:100px">
+      <div>
+        {{"Blade"+idSelected.slice(5,6) +"-Image"+ &nbsp;+ imageIndex}}<br>
+        Add/Edit Notes
+      </div>
+      <mat-icon (click)="drawer.toggle()" class="icon">close</mat-icon>
+    </mat-toolbar><br>
     <div>
       <button mat-raised-button class="button" (click)="dialogbox(templateAdd)">
         +
       </button>
       <div class="addnote">Add Note</div>
-          
-      <div *ngFor ="let i of notes ; let j=index">
-        <hr>
-       <div> {{JSON.stringify(i.date)|date}}</div>
-       <div> {{JSON.stringify(i.text)}}</div>
-      
-    
-     <div>
-      <button mat-button style="color:blue" (click)="dialogbox(templatedelete);deleted(j)">DELETE</button>
-      <button mat-button style="color:blue;margin-left: 80px;"(click)="dialogbox(templateedit);edit(j)">EDIT</button>
-     </div>
 
-     </div>
+      <div *ngFor="let i of notes ; let j=index">
+        <hr>
+        <div> {{JSON.stringify(i.date)|date}}</div>
+        <div> {{JSON.stringify(i.text)}}</div>
+
+
+        <div>
+          <button mat-button style="color:blue" (click)="dialogbox(templatedelete);deleted(j)">DELETE</button>
+          <button mat-button style="color:blue;margin-left: 80px;"
+            (click)="dialogbox(templateedit);edit(j)">EDIT</button>
+        </div>
+
+      </div>
     </div>
   </mat-sidenav>
   <mat-sidenav-content>
 
     <mat-toolbar style="background-color:#7165db;width:100%">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button 
-        *ngIf="isHandset$ | async">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button *ngIf="isHandset$ | async">
       </button>
       <p style="color:white;margin-left: 30px;margin-top: 3px;">Wind Mill Inspection</p>
     </mat-toolbar>
- <div class="details">
+    <div class="details">
       <!--diagloue box-->
-        <ng-template #templateAdd>
+      <ng-template #templateAdd>
         <div>
           <h1>Add Notes</h1>
           <form [formGroup]="dialogueForm">
-          <input type="text"class="input" formControlName="note" id="note">
-          <hr>
-          <button mat-raised-button color="primary" mat-dialog-close (click)="cancel()">cancel</button>
-          <button mat-raised-button color="accent"class="s" (click)="save()" [disabled]="dialogueForm.invalid">save</button>
+            <input type="text" class="input" formControlName="note" id="note">
+            <hr>
+            <button mat-raised-button color="primary" mat-dialog-close (click)="cancel()">cancel</button>
+            <button mat-raised-button color="accent" class="s" (click)="save()"
+              [disabled]="dialogueForm.invalid">save</button>
           </form>
         </div>
 
-        </ng-template>
-        
+      </ng-template>
 
 
 
-        <ng-template #templatedelete>
-          <div>
-            <h1>Delete Notes</h1>
+
+      <ng-template #templatedelete>
+        <div>
+          <h1>Delete Notes</h1>
           <p>Are you sure want to delete this note?</p>
+          <hr>
+          <button mat-raised-button color="primary" mat-dialog-close (click)="delete()">DELETE</button>
+          <button mat-raised-button class="a" mat-dialog-close>Cancel</button>
+
+        </div>
+
+      </ng-template>
+      <ng-template #templateedit>
+        <div>
+          <h1>Edit Notes</h1>
+          <form [formGroup]="dialogueForm">
+            <input type="text" class="input" formControlName="note" id="note">
             <hr>
-            <button mat-raised-button color="primary"  mat-dialog-close (click)="delete()">DELETE</button>
-            <button mat-raised-button class="a"  mat-dialog-close >Cancel</button>
-          
-          </div>
-  
-          </ng-template>
-          
-
-          <ng-template #templateedit>
-            <div>
-              <h1>Edit Notes</h1>
-              <form [formGroup]="dialogueForm">
-                <input type="text"class="input" formControlName="note" id="note">
-                <hr>
-                <button mat-raised-button color="primary" mat-dialog-close>Cancel</button>
-                <button mat-raised-button color="accent"class="s" (click)="editNote()" [disabled]="dialogueForm.invalid">save</button>
-              </form>
-            
-            </div>
-    
-            </ng-template>  
-
-
+            <button mat-raised-button color="primary" mat-dialog-close>Cancel</button>
+            <button mat-raised-button color="accent" class="s" mat-dialog-close (click)="editNote()"
+              [disabled]="dialogueForm.invalid">save</button>
+          </form>
+        </div>
+      </ng-template>
       <div class="item1" fxFlex="30%" fxLayout.xs="column" *ngFor="let i of   displayList">
         {{i.wtg_id}}
         <div class="item2">
@@ -105,10 +101,10 @@
           WTG Model:{{i.wtg_model}}
         </div><br>
         <div class="note">
-          <img src="assets\images\notes.png"  (click)="bladeClick(listA.notes,listA.blade_id.slice(5,6))">
+          <img src="assets\images\notes.png" (click)="bladeClick(listA.notes,listA.blade_id.slice(5,6))">
           Add Note
           {{listA.notes.length}}
-         
+
         </div>
       </div>
 
@@ -116,30 +112,30 @@
         <div class="filter">
           <mat-form-field appearance="fill">
             <mat-label>{{filterId}}</mat-label>
-          
-              <mat-select [(value)]="filterId" (selectionChange)="onToggleFilter($event)">
-            
-                <mat-option *ngFor="let id of wtg_IdList" [value]="id"> 
-                  <div fxLayoutAlign="start center"fxLayoutGap="10px">
+
+            <mat-select [(value)]="filterId" (selectionChange)="onToggleFilter($event)">
+
+              <mat-option *ngFor="let id of wtg_IdList" [value]="id">
+                <div fxLayoutAlign="start center" fxLayoutGap="10px">
                   <div>
                     {{id}}
                   </div>
-                  </div>
-                </mat-option>
-              </mat-select>
-            
-          
+                </div>
+              </mat-option>
+            </mat-select>
+
+
           </mat-form-field>
 
           <mat-form-field appearance="fill">
             <mat-label>{{filterDate}}</mat-label>
-            <mat-select  [(value)]="filterDate" (selectionChange)="onToggleFilter($event)">
+            <mat-select [(value)]="filterDate" (selectionChange)="onToggleFilter($event)">
               <mat-option *ngFor="let i of inspectionsList" [value]="i">
-                <div fxLayoutAlign="start center"fxLayoutGap="10px">
+                <div fxLayoutAlign="start center" fxLayoutGap="10px">
                   <div>
                     {{i}}
                   </div>
-                  </div>
+                </div>
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -163,7 +159,9 @@
                 }}<br>
                 {{i.notes.length}}
 
-                <img src="assets\images\notes.png" (click)="imageClick(listA.inspection_date.slice(0,10),listA.blade_id,j,i.notes)" width="30px" height="30px">
+                <img src="assets\images\notes.png"
+                  (click)="imageClick(listA.inspection_date.slice(0,10),listA.blade_id,j,i.notes)" width="30px"
+                  height="30px">
 
               </div>
 
@@ -171,7 +169,7 @@
           </div>
 
         </div>
-      </div> 
+      </div>
 
     </div>
     <hr>
@@ -195,7 +193,7 @@
           WTG Model:{{i.wtg_model}}
         </div><br>
         <div class="note">
-          <img src="assets\images\notes.png" (click)="bladeClick(listB.notes,listB.blade_id.slice(5,6))" >
+          <img src="assets\images\notes.png" (click)="bladeClick(listB.notes,listB.blade_id.slice(5,6))">
           Add Note
         </div>
       </div>
@@ -217,7 +215,7 @@
               : i.image_cat.auto)
               }}
 
-              <img src="assets\images\notes.png" width="30px" height="30px"  (click)="imageClick(
+              <img src="assets\images\notes.png" width="30px" height="30px" (click)="imageClick(
                 listB.inspection_date.slice(0,10),
                 listB.blade_id,j,i.notes)">
 
@@ -227,7 +225,7 @@
         </div>
 
       </div>
-  </div>
+    </div>
 
     <hr>
     <div class="details">
@@ -271,7 +269,8 @@
               : i.image_cat.auto)
               }}
 
-              <img src="assets\images\notes.png" width="30px" height="30px"  (click)="imageClick(listC.inspection_date.slice(0,10),listC.blade_id,j,i.notes)">
+              <img src="assets\images\notes.png" width="30px" height="30px"
+                (click)="imageClick(listC.inspection_date.slice(0,10),listC.blade_id,j,i.notes)">
 
             </div>
 
@@ -280,7 +279,6 @@
 
       </div>
     </div>
-</mat-sidenav-content>
+  </mat-sidenav-content>
 
 </mat-sidenav-container>
-  

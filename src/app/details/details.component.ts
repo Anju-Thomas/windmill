@@ -215,9 +215,8 @@ cancel(){
 }
 edit(editIndex:number ){
   this.editIndex=editIndex
-  console.log(this.notes[editIndex].text);
   this.dialogueForm.patchValue({
-    notes:this.notes[editIndex].text
+    note:this.notes[editIndex].text
   })
 
 }
